@@ -12,30 +12,28 @@ const maxy = config.get('maxy')
 const configPath = config.get('configPath')
 const planetPath = config.get('planetPath')
 
-let configuration = {
-  extracts: [],
-  directory: 'pbf'
-}
-
 for (let x = minx; x <= maxx; x++) {
   for (let y = miny; y <= maxy; y++) {
+    let configuration = {
+      extracts: [],
+      directory: 'pbf'
+    }
     configuration.extracts.push({
       output: `${z}-${x}-${y}.pbf`,
       output_format: 'pbf',
       bbox: tilebelt.tileToBBOX([x, y, z])
     })
+    fs.writeFileSync(
+      configPath,
+      JSON.stringify(configuration, null, 2)
+    )
+    spawnSync('osmium', [
+      'extract', '--config', configPath, 
+      '--strategy=smart', 
+      '--verbose', '--overwrite', '--progress', 
+      planetPath],
+      { stdio: 'inherit' }
+    )
   }
 }
 
-fs.writeFileSync(
-  configPath,
-  JSON.stringify(configuration, null, 2)
-)
-
-spawnSync('osmium', [
-  'extract', '--config', configPath, 
-  '--strategy=smart', 
-  '--verbose', '--overwrite', '--progress', 
-  planetPath],
-  { stdio: 'inherit' }
-)
