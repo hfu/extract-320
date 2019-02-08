@@ -1,0 +1,9 @@
+{
+  z: 6
+  minx: 22
+  miny: 24
+  maxx: 41
+  maxy: 39
+  configPath: configure.json
+  planetPath: ../welt/planet-190128.osm.pbf
+}
